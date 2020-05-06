@@ -95,3 +95,15 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
     print('available beds: ', available_beds)
     pylab.plot(X_num_days, Y_available_beds)
     return available_beds
+
+def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
+    new_days = []
+    lst_day_out = []
+    for k in range(len(lst_day)):
+        day = k
+        day = day + lst_day[k]
+        day_out = day + lst_time_to_outcome[k]
+        new_days.append(day)
+        lst_day_out.append(day_out)
+    avail_beds = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
+    return avail_beds
