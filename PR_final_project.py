@@ -47,3 +47,20 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
     beta = beta * (maximum - minimum) + minimum
     return beta
 
+class Variables():
+
+    def s_e():
+        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
+        return infectious_rate
+
+    def e_i():
+        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000000)) # alpha
+        arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000000))
+        prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000000))
+        time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000000)))
+        return incubation_rate, arrival_rate, prob_positive, time_test_result
+
+    def i_r():
+        time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
+        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gammad
+        return time_to_outcome, outcome_rate
