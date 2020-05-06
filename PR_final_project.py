@@ -50,6 +50,7 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
 class Variables():
 
     def s_e():
+        #
         infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
         return infectious_rate
 
@@ -155,3 +156,18 @@ def model(number_of_days, population, total_beds): #https://www.datahubbs.com/so
         lst_time_to_outcome.append(outcome_time)
     bed_count = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return bed_count
+
+def simulation(number_of_days, number_of_simulation, population, total_beds):
+    i = 0
+    count = 0
+    beds = []
+    while i < number_of_simulation:
+        beds = model(number_of_days, population, total_beds)
+        for j in range(len(beds)):
+            if beds[j] < 0:
+                index = j
+                count += 1
+                break
+        i += 1
+    probability = count/number_of_simulation
+    print("The probability of hospitals overflowing: ", probability)
