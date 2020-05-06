@@ -1,14 +1,3 @@
-# 1) Arrival rate of people who want to get tested
-# 2) Rate at which people are being exposed despite social distinsing (Infectious rate)
-# 3) Probability of these  people actually having COVID-19 (getting tested positive)
-# 4) Recovery time distribution of patients (depends on age)
-# 5) Service time distribution of testing kits (Median - 2 days range(1-7days)) (Chi-Squared distrbution)
-# 6) Rate at which testing kits are supplied
-# 7) Incubation period of people getting contracted
-# 8) Recovery Rate of patients
-
-
-
 from random import choice, randint, choices, seed, uniform, random
 import numpy as np
 from numba import jit
@@ -51,19 +40,25 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
 
 class Variables():
 
+    #concept of transition between compartments - https: // www.idmod.org / docs / hiv / model - seir.html
     def s_e():
-        #
+        # infectious rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
         infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
         return infectious_rate
 
     def e_i():
+        #incubation rate - https: // www.inverse.com / mind - body / how - long - are - you - infectious - when - you - have - coronavirus, https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
         incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000000)) # alpha
+        #arrival rate - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
         arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000000))
+        #probability of people testing positive for COVID-19 - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
         prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000000))
+        #time for test results to arrive
         time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000000)))
         return incubation_rate, arrival_rate, prob_positive, time_test_result
 
     def i_r():
+        #time for outcome as well as outcome rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
         outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gamma
         return time_to_outcome, outcome_rate
@@ -111,7 +106,8 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
     avail_beds = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return avail_beds
 
-def model(number_of_days, population, total_beds): #https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
+def model(number_of_days, population, total_beds): #
+    #concept of compartments - https: // www.idmod.org / docs / hiv / model - seir.html, https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
     number_of_beds = total_beds # beds in champaign
     total_population = population
     exposed = 1.0
@@ -143,7 +139,7 @@ def model(number_of_days, population, total_beds): #https://www.datahubbs.com/so
         lst_infected.append(infected)
         # Y_available_beds = lst_infected
 
-        hospitalized = int(infected*(17/100)) # people who requires hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+        hospitalized = int(infected*(17/100)) # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
         # Y_available_beds = lst_hospitalized
 
@@ -173,6 +169,9 @@ def simulation(number_of_days, number_of_simulation, population, total_beds):
         i += 1
     probability = count/number_of_simulation
     print("The probability of hospitals overflowing: ", probability)
+
+
+if __name__ == '__main__':
 
     population = int(input("Enter the total population to be considered: "))
     total_beds = int(input("Enter the number of beds to be considered: "))
