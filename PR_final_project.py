@@ -80,6 +80,7 @@ class Variables():
         Outcome Rate      =  Rate at which people are leaving hospital bed (Dead / Recovered)
         :return: Time to Outcome, Outcome Rate
         """
+        # time_to_outcome, outcome_rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
         outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gamma
         return time_to_outcome, outcome_rate
