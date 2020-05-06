@@ -36,45 +36,7 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
 
     beta = np.random.beta(a, b, samples)
     beta = beta * (maximum - minimum) + minimum
-    return beta
-
-class Variables():
-    """
-        This class contains all the variables which are resposible for the COVID-19 spread
-        According to SEIR model:
-        S = Suceptibility
-        E= Exposed
-        I = Infectious
-        R = Result
-        """
-    # concept of transition between compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
-
-    def s_e(): # s = Suceptibility    ;   e= Exposed
-        """
-        Infectious Rate (Beta= = R1 * Gamma) based on the pert distribution
-        :return: Infectious Rate
-        """
-        # infectious rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
-        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
-        return infectious_rate
-
-    def e_i(): # e= Exposed;    i = Infectious
-        """
-        Alpha           =   Incubation Rate = time in which infection is showing symptoms
-        Arrival Rate =  Arrival Rate of patients at the hospitals
-        Test Results  =  Time for test results to arrive
-        :return: Incubation Rate, Arrival Rate, Probability of being COVID-19 positive, Test Results
-        """
-        #incubation rate - https: // www.inverse.com / mind - body / how - long - are - you - infectious - when - you - have - coronavirus, https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
-        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000000)) # alpha
-        #arrival rate - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
-        arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000000))
-        #probability of people testing positive for COVID-19 - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
-        prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000000))
-        time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000000)))
-        return incubation_rate, arrival_rate, prob_positive, time_test_result
-
-    def i_r(): # i= Infectious;    r = Result
+    def i_r(): # i= Infectious;    r = Recovered
         """
         Time to Outcome = Number of days patient will leave the hospital (Dead / Recovered)
         Outcome Rate      =  Rate at which people are leaving hospital bed (Dead / Recovered)
@@ -89,12 +51,12 @@ class Variables():
 def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
     """
         beds_available = Number of available beds
-        :param number_of_days:  Number days of the pendemic we want to test on
-        :param new_days: this list contains the number of days after which the test result are coming out
-        :param lst_outcome:list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out:this is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param lst_hospitalized: This is the list of patients wo are hospitalized after being tested
-        :param number_of_beds: This is the available number of hospital beds in the given city
+        :param number_of_days:  Number days of the pendemic
+        :param new_days:
+        :param lst_outcome:
+        :param lst_day_out:
+        :param lst_hospitalized:
+        :param number_of_beds:
         :return:  beds_available
         """
     admitted_beds = []
@@ -110,14 +72,13 @@ def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospita
 
 def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds):
     """
-        available_beds : This function gives the number of available beds after admitting the patients. It keeps on updating the
-        number of available beds based on the admitted patients and  outcome patients.
-        :param number_of_days: Number of days simulation has to run
-        :param lst_outcome:  list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out:  this is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param number_of_beds:  This is the available number of hospital beds in the given city
-        :param admitted_beds: List of beds after admitting the patients
-        :return:  available_beds: list of available beds for given day
+        available_beds =
+        :param number_of_days:
+        :param lst_outcome:
+        :param lst_day_out:
+        :param number_of_beds:
+        :param admitted_beds:
+        :return:  available_beds
         """
     X_num_days = []
     Y_available_beds = []
@@ -139,15 +100,15 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
 def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
     """
         avail_beds =
-        :param lst_day: list of nth days when test result are coming out
-        :param lst_time_to_outcome: the nth day when outcome have come with respect to the admitted day
-        :param number_of_days: number of days to test the simulation
-        :param new_days: this is the list of number of days for each day in simulation, after which the test result are arriving
-        :param lst_outcome: list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out: this is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param lst_hospitalized: number of patients hospitalized
-        :param number_of_beds: number of hospital beds available in simulation
-        :return: avail_beds: list of available beds for given day
+        :param lst_day:
+        :param lst_time_to_outcome:
+        :param number_of_days:
+        :param new_days:
+        :param lst_outcome:
+        :param lst_day_out:
+        :param lst_hospitalized:
+        :param number_of_beds:
+        :return: avail_beds
         """
     new_days = []
     lst_day_out = []
@@ -163,10 +124,10 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
 def model(number_of_days, population, total_beds):
     """
         bed_count =
-        :param number_of_days: number of days simulation has to run for
-        :param population: general population of the region
-        :param total_beds: total number of hospital beds available in the region
-        :return: bed_count: list of available beds
+        :param number_of_days:
+        :param population:
+        :param total_beds:
+        :return: bed_count
         """
     #concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
     number_of_beds = total_beds # beds in champaign
@@ -219,11 +180,11 @@ def model(number_of_days, population, total_beds):
 def simulation(number_of_days, number_of_simulation, population, total_beds):
     """
 
-    :param number_of_days: number of days for which simulation will run
-    :param number_of_simulation: total number of simulation we have to perform
-    :param population: general population in the region
-    :param total_beds: total number of hospital beds in the region
-    :return: None
+    :param number_of_days:
+    :param number_of_simulation:
+    :param population:
+    :param total_beds:
+    :return:
     """
     i = 0
     count = 0
