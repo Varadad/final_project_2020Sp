@@ -12,6 +12,8 @@
 from random import choice, randint, choices, seed, uniform, random
 import numpy as np
 from numba import jit
+from pandas import pd
+
 
 import matplotlib.pyplot as plt
 from matplotlib import pylab
@@ -171,3 +173,14 @@ def simulation(number_of_days, number_of_simulation, population, total_beds):
         i += 1
     probability = count/number_of_simulation
     print("The probability of hospitals overflowing: ", probability)
+
+    population = int(input("Enter the total population to be considered: "))
+    total_beds = int(input("Enter the number of beds to be considered: "))
+    simulations = int(input("Enter the number of simulations to be considered: "))
+    number_of_days = int(input("Enter the number of days to be considered: "))
+
+    simulation(number_of_days, simulations, population, total_beds)
+
+    pylab.ylabel('Available Beds')
+    pylab.xlabel('Number of Days')
+    pylab.show()
