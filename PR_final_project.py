@@ -62,7 +62,7 @@ class Variables():
 
     def i_r():
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
-        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gammad
+        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gamma
         return time_to_outcome, outcome_rate
 
 
@@ -107,3 +107,51 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
         lst_day_out.append(day_out)
     avail_beds = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return avail_beds
+
+def model(number_of_days, population, total_beds): #https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
+    number_of_beds = total_beds # beds in champaign
+    total_population = population
+    exposed = 1.0
+    susceptible = total_population
+    infected = 0.0
+    day = 0
+    hospitalized = 0
+
+    lst_infected = []
+    lst_outcome = []
+    lst_time_to_outcome = []
+    lst_day = []
+    lst_day_out = []
+    new_days = []
+    lst_hospitalized = []
+
+    for i in range(number_of_days):
+
+        susceptible = susceptible - int(Variables.s_e())*infected*susceptible
+
+        incub_rate, arr_rate, prob_pos, test_result_time = Variables.e_i()
+
+        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.005 #people getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
+
+        day = day + test_result_time
+
+        infected = arr_rate * prob_pos * exposed
+
+        lst_infected.append(infected)
+        # Y_available_beds = lst_infected
+
+        hospitalized = int(infected*(17/100)) # people who requires hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+        lst_hospitalized.append(hospitalized)
+        # Y_available_beds = lst_hospitalized
+
+
+        outcome_time, rate_outcome = Variables.i_r()
+
+        outcome = rate_outcome * hospitalized
+
+        lst_outcome.append(outcome)
+
+        lst_day.append(test_result_time)
+        lst_time_to_outcome.append(outcome_time)
+    bed_count = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
+    return bed_count
