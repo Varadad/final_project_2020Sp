@@ -82,13 +82,13 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
     X_num_days = []
     Y_available_beds = []
     available_beds = []
-    simulation_df = pd.DataFrame()
     for i in range(number_of_days):
         X_num_days.append(i)
-        # simulation_df['x'] = X_num_days
         for j in range(lst_day_out[i] + 1):
             if j == lst_day_out[i]:
                 admitted_beds[i] = admitted_beds[i] + lst_outcome[i]
                 available_beds.append(admitted_beds[i])
     Y_available_beds = available_beds
-    # simulation_df['y'] = available_beds
+    print('available beds: ', available_beds)
+    pylab.plot(X_num_days, Y_available_beds)
+    return available_beds
