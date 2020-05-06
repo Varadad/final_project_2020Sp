@@ -92,3 +92,6 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
                 available_beds.append(admitted_beds[i])
     Y_available_beds = available_beds
     # simulation_df['y'] = available_beds
+    print('available beds: ', available_beds)
+    pylab.plot(X_num_days, Y_available_beds)
+    return available_beds
