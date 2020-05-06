@@ -1,2 +1,6 @@
-# final_project
-Each team creates a fork from this for their course project
+# Monte Carlo Simulation on Hospital Capacity during COVID-19
+Team Members-
+Rohit Sanvaliya
+Tanya Gupta
+Varad Deshpande
+
