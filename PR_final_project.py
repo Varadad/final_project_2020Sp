@@ -64,3 +64,31 @@ class Variables():
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
         outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gammad
         return time_to_outcome, outcome_rate
+
+
+def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
+    admitted_beds = []
+    for i in range(number_of_days):
+        for j in range(new_days[i] + 1):
+            if j == new_days[i]:
+                number_of_beds = number_of_beds - lst_hospitalized[i]
+                admitted_beds.append(number_of_beds)
+    beds_available = available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds)
+    return beds_available
+
+    # print("Admitted beds: ", admitted_beds)
+
+def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds):
+    X_num_days = []
+    Y_available_beds = []
+    available_beds = []
+    simulation_df = pd.DataFrame()
+    for i in range(number_of_days):
+        X_num_days.append(i)
+        # simulation_df['x'] = X_num_days
+        for j in range(lst_day_out[i] + 1):
+            if j == lst_day_out[i]:
+                admitted_beds[i] = admitted_beds[i] + lst_outcome[i]
+                available_beds.append(admitted_beds[i])
+    Y_available_beds = available_beds
+    # simulation_df['y'] = available_beds
