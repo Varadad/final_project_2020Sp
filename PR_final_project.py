@@ -19,13 +19,8 @@ Note:
 
 from random import choice, randint, choices, seed, uniform, random
 import numpy as np
-from numba import jit
-from pandas import pd
-
-
 import matplotlib.pyplot as plt
 from matplotlib import pylab
-import time
 
 
 def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
@@ -74,7 +69,7 @@ class Variables():
         :return: Infectious Rate
         """
         # infectious rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
-        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
+        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000))) # beta
         return infectious_rate
 
     def e_i(): # e= Exposed;    i = Infectious
@@ -85,12 +80,12 @@ class Variables():
         :return: Incubation Rate, Arrival Rate, Probability of being COVID-19 positive, Test Results
         """
         #incubation rate - https: // www.inverse.com / mind - body / how - long - are - you - infectious - when - you - have - coronavirus, https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
-        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000000)) # alpha
+        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000)) # alpha
         #arrival rate - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
-        arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000000))
+        arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000))
         #probability of people testing positive for COVID-19 - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
-        prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000000))
-        time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000000)))
+        prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000))
+        time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000)))
         return incubation_rate, arrival_rate, prob_positive, time_test_result
 
     def i_r(): # i= Infectious;    r = Result
@@ -100,8 +95,8 @@ class Variables():
         :return: Time to Outcome, Outcome Rate
         """
         # time_to_outcome, outcome_rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
-        time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
-        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gamma
+        time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000)))
+        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000))  # gamma
         return time_to_outcome, outcome_rate
 
 
@@ -141,7 +136,6 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
     X_num_days = []
     Y_available_beds = []
     available_beds = []
-    simulation_df = pd.DataFrame()
     for i in range(number_of_days):
         X_num_days.append(i)
         # simulation_df['x'] = X_num_days
