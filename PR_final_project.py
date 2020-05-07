@@ -223,7 +223,7 @@ def simulation(number_of_days, number_of_simulation, population, total_beds):
     :param number_of_simulation: total number of simulation we have to perform
     :param population: general population in the region
     :param total_beds: total number of hospital beds in the region
-    :return:
+    :return: None
     """
     i = 0
     count = 0
