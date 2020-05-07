@@ -241,7 +241,7 @@ def simulation(number_of_days, number_of_simulation, population, total_beds):
         beds = model(number_of_days, population, total_beds)
 
         if beds[-1] < 0:
-            prob_vacant = (beds[-1] / total_beds) * -1
+            prob_vacant = 0
         else:
             prob_vacant = (beds[-1] / total_beds)
 
