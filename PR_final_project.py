@@ -229,28 +229,33 @@ def model(number_of_days, population, total_beds):
     bed_count = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return bed_count
 
-def simulation(number_of_days, number_of_simulation, population, total_beds):
-    """
 
-    :param number_of_days: number of days for which simulation will run
-    :param number_of_simulation: total number of simulation we have to perform
-    :param population: general population in the region
-    :param total_beds: total number of hospital beds in the region
-    :return: None
-    """
+def simulation(number_of_days, number_of_simulation, population, total_beds):
     i = 0
     count = 0
     beds = []
+    prob_vacant_beds = []
+
     while i < number_of_simulation:
+
         beds = model(number_of_days, population, total_beds)
+
+        if beds[-1] < 0:
+            prob_vacant = (beds[-1] / total_beds) * -1
+        else:
+            prob_vacant = (beds[-1] / total_beds)
+
+        print(prob_vacant)
+        prob_vacant_beds.append(prob_vacant)
         for j in range(len(beds)):
             if beds[j] < 0:
                 index = j
                 count += 1
                 break
         i += 1
-    probability = count/number_of_simulation
-    print("The probability of hospitals overflowing: ", probability)
+    probability = count / number_of_simulation
+    percent_vacant_bed = sum(prob_vacant_beds) / len(prob_vacant_beds)
+    print('The Probability of vacant beds is:', probability)
 
 if __name__ == '__main__':
 
