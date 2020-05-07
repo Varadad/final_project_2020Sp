@@ -1,17 +1,28 @@
-from random import choice, randint, choices, seed, uniform, random
+
+"""
+IS 590 PR - Final Project
+
+Monte Carlo Simulation on Hospital Capacity During COVID-19
+
+Team members:
+                        Varad Deshpande
+                        Rohit Sanvaliya
+                        Tanya Gupta
+Note:
+    The ranges of all randomised variables have been taken from real data from various
+    sourses that are cited withing the code as well as in the README document of github
+    repository of github's project repository
+
+"""
+
 import numpy as np
 from numba import jit
 from pandas import pd
-
-
-import matplotlib.pyplot as plt
 from matplotlib import pylab
-import time
-
 
 def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
-    """Produce random numbers according to the 'Modified PERT' distribution.
-
+    """
+    Produce random numbers according to the 'Modified PERT' distribution.
         :param minimum: The lowest value expected as possible.
         :param most_likely: The 'most likely' value, statistically, the mode.
         :param maximum: The highest value expected as possible.
@@ -40,7 +51,7 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
 
 class Variables():
     """
-        This class contains all the variables which are resposible for the COVID-19 spread
+        This class contains all the functions to calculate the values of the variables, which are responsible for the COVID-19 spread
         According to SEIR model:
         S = Suceptibility
         E= Exposed
@@ -49,7 +60,7 @@ class Variables():
         """
     # concept of transition between compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
 
-    def s_e(): # s = Suceptibility    ;   e= Exposed
+    def s_e(): # s = Suceptibility  ;   e= Exposed
         """
         Infectious Rate (Beta= = R1 * Gamma) based on the pert distribution
         :return: Infectious Rate
@@ -58,7 +69,7 @@ class Variables():
         infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))) # beta
         return infectious_rate
 
-    def e_i(): # e= Exposed;    i = Infectious
+    def e_i(): # e= Exposed ;    i = Infectious
         """
         Alpha           =   Incubation Rate = time in which infection is showing symptoms
         Arrival Rate =  Arrival Rate of patients at the hospitals
@@ -74,7 +85,7 @@ class Variables():
         time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000000)))
         return incubation_rate, arrival_rate, prob_positive, time_test_result
 
-    def i_r(): # i= Infectious;    r = Result
+    def i_r(): # i= Infectious  ;    r = Result
         """
         Time to Outcome = Number of days patient will leave the hospital (Dead / Recovered)
         Outcome Rate      =  Rate at which people are leaving hospital bed (Dead / Recovered)
@@ -84,7 +95,6 @@ class Variables():
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000000)))
         outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000000))  # gamma
         return time_to_outcome, outcome_rate
-
 
 def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
     """
@@ -105,8 +115,6 @@ def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospita
                 admitted_beds.append(number_of_beds)
     beds_available = available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds)
     return beds_available
-
-    # print("Admitted beds: ", admitted_beds)
 
 def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds):
     """
@@ -162,7 +170,9 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
 
 def model(number_of_days, population, total_beds):
     """
-        bed_count =
+        This function feeds in the values after calculation in the "test_result_days" function,
+        to get the total available number of the beds.
+        bed_count = Value of the available
         :param number_of_days: number of days simulation has to run for
         :param population: general population of the region
         :param total_beds: total number of hospital beds available in the region
@@ -176,7 +186,6 @@ def model(number_of_days, population, total_beds):
     infected = 0.0
     day = 0
     hospitalized = 0
-
     lst_infected = []
     lst_outcome = []
     lst_time_to_outcome = []
@@ -191,24 +200,16 @@ def model(number_of_days, population, total_beds):
 
         incub_rate, arr_rate, prob_pos, test_result_time = Variables.e_i()
 
-        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.005 #people getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
-
+        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.005 #People getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
         day = day + test_result_time
-
         infected = arr_rate * prob_pos * exposed
-
         lst_infected.append(infected)
         # Y_available_beds = lst_infected
-
-        hospitalized = int(infected*(17/100)) # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+        hospitalized = int(infected*(17/100))  # People who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
         # Y_available_beds = lst_hospitalized
-
-
         outcome_time, rate_outcome = Variables.i_r()
-
         outcome = rate_outcome * hospitalized
-
         lst_outcome.append(outcome)
 
         lst_day.append(test_result_time)
@@ -218,7 +219,7 @@ def model(number_of_days, population, total_beds):
 
 def simulation(number_of_days, number_of_simulation, population, total_beds):
     """
-
+    This function prints out the values of the probability of hospitals overflowing
     :param number_of_days: number of days for which simulation will run
     :param number_of_simulation: total number of simulation we have to perform
     :param population: general population in the region
