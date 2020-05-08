@@ -138,13 +138,13 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
     available_beds = []
     for i in range(number_of_days):
         X_num_days.append(i)
-        # simulation_df['x'] = X_num_days
+
         for j in range(lst_day_out[i] + 1):
             if j == lst_day_out[i]:
                 admitted_beds[i] = admitted_beds[i] + lst_outcome[i]
                 available_beds.append(admitted_beds[i])
     Y_available_beds = available_beds
-    # simulation_df['y'] = available_beds
+
     print('available beds: ', available_beds)
     pylab.plot(X_num_days, Y_available_beds)
     return available_beds
@@ -157,7 +157,7 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
         :param number_of_days: number of days to test the simulation
         :param new_days: this is the list of number of days for each day in simulation, after which the test result are arriving
         :param lst_outcome: list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out: this is the list of number of days for each day in simulation, after which the outcome is recieved
+        :param lst_day_out: this is the list of number of days for each day in simulation, after which the outcome is received
         :param lst_hospitalized: number of patients hospitalized
         :param number_of_beds: number of hospital beds available in simulation
         :return: avail_beds: list of available beds for given day
@@ -188,7 +188,7 @@ def model(number_of_days, population, total_beds):
     susceptible = total_population
     infected = 0.0
     day = 0
-    hospitalized = 0
+
 
     lst_infected = []
     lst_outcome = []
@@ -211,11 +211,11 @@ def model(number_of_days, population, total_beds):
         infected = arr_rate * prob_pos * exposed
 
         lst_infected.append(infected)
-        # Y_available_beds = lst_infected
+
 
         hospitalized = int(infected*(17/100)) # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
-        # Y_available_beds = lst_hospitalized
+
 
 
         outcome_time, rate_outcome = Variables.i_r()
@@ -233,7 +233,6 @@ def model(number_of_days, population, total_beds):
 def simulation(number_of_days, number_of_simulation, population, total_beds):
     i = 0
     count = 0
-    beds = []
     prob_vacant_beds = []
 
     while i < number_of_simulation:
