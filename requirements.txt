@@ -1,0 +1,6 @@
+###### Requirements without Version Specifiers ######
+
+random
+numpy
+matplotlib.pyplot
+matplotlib
