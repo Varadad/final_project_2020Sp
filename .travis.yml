@@ -10,10 +10,10 @@ before_install:
   - python --version
   - pip install -U pip
   - pip install -U pytest
-  - pypm install functools
 
 install:
-  - pip3 install -r requirements.txt
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
 
 # command to run Doctests
 script: pytest --doctest-modules
