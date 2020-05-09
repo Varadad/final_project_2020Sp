@@ -1,4 +1,7 @@
 # List of the pip packages that must be installed for this project to work.
 # (Travis CI will install these before it tries running your Doctests.
 numpy
-matplotlib
+matplotlib.pyplot
+multiprocessing
+functools
+tqdm
