@@ -142,8 +142,9 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
                 available_beds.append(admitted_beds[i])
     Y_available_beds = available_beds
     # simulation_df['y'] = available_beds
-    # print('available beds: ', available_beds)
-    return available_beds, X_num_days
+    print('available beds: ', available_beds)
+    pylab.plot(X_num_days, Y_available_beds)
+    return available_beds
 
 def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
     """
@@ -229,9 +230,7 @@ def model(simulation_id, number_of_days, population, total_beds):
 def simulation(number_of_days, number_of_simulation, population, total_beds, do_threading=True):
     count = 0
     beds = []
-    perc_vacant_beds = []
-
-    #Multiprocessing starts
+    prob_vacant_beds = []
 
     worker = partial(model, number_of_days=number_of_days, population=population, total_beds=total_beds)
 
