@@ -7,7 +7,7 @@ matrix:
     - python: 3.8
 
 install:
-  - pip3 install --upgrade pip setuptools wheel
+  - pip3 install --upgrade setuptools
   - pip3 install -r requirements.txt
 
 # command to run Doctests
