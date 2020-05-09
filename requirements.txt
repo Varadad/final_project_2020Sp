@@ -3,5 +3,5 @@
 numpy
 matplotlib
 multiprocess
-functools
+shell-functools
 tqdm
