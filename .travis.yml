@@ -7,7 +7,8 @@ matrix:
     - python: 3.8
 
 install:
-  - pip3 install -r requirements.txt
+  - sudo pip3 install --upgrade pip setuptools wheel
+  - sudo pip3 -r requirements.txt
 
 # command to run Doctests
 script: pytest --doctest-modules
