@@ -2,6 +2,6 @@
 # (Travis CI will install these before it tries running your Doctests.
 numpy
 matplotlib
-multiprocessing
+multiprocess
 functools
 tqdm
