@@ -14,14 +14,11 @@ Note:
     repository of github's project repository
 
 """
-
-
-
-from random import choice, randint, choices, seed, uniform, random
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import pylab
-
+from multiprocessing import Pool
+from functools import partial
+from tqdm import tqdm
 
 def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
     """Produce random numbers according to the 'Modified PERT' distribution.
@@ -145,9 +142,8 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
                 available_beds.append(admitted_beds[i])
     Y_available_beds = available_beds
     # simulation_df['y'] = available_beds
-    print('available beds: ', available_beds)
-    pylab.plot(X_num_days, Y_available_beds)
-    return available_beds
+    # print('available beds: ', available_beds)
+    return available_beds, X_num_days
 
 def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
     """
@@ -170,10 +166,10 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
         day_out = day + lst_time_to_outcome[k]
         new_days.append(day)
         lst_day_out.append(day_out)
-    avail_beds = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
-    return avail_beds
+    avail_beds, num_days = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
+    return avail_beds, num_days
 
-def model(number_of_days, population, total_beds):
+def model(simulation_id, number_of_days, population, total_beds):
     """
         bed_count =
         :param number_of_days: number of days simulation has to run for
@@ -182,6 +178,7 @@ def model(number_of_days, population, total_beds):
         :return: bed_count: list of available beds
         """
     #concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
+    np.random.seed(simulation_id)
     number_of_beds = total_beds # beds in champaign
     total_population = population
     exposed = 1.0
@@ -204,7 +201,7 @@ def model(number_of_days, population, total_beds):
 
         incub_rate, arr_rate, prob_pos, test_result_time = Variables.e_i()
 
-        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.005 #people getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
+        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05 #people getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
 
         day = day + test_result_time
 
@@ -226,46 +223,126 @@ def model(number_of_days, population, total_beds):
 
         lst_day.append(test_result_time)
         lst_time_to_outcome.append(outcome_time)
-    bed_count = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
-    return bed_count
+    bed_count, num_days = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
+    return bed_count, num_days
 
-
-def simulation(number_of_days, number_of_simulation, population, total_beds):
-    i = 0
+def simulation(number_of_days, number_of_simulation, population, total_beds, do_threading=True):
     count = 0
     beds = []
-    prob_vacant_beds = []
+    perc_vacant_beds = []
 
-    while i < number_of_simulation:
+    #Multiprocessing starts
 
-        beds = model(number_of_days, population, total_beds)
+    worker = partial(model, number_of_days=number_of_days, population=population, total_beds=total_beds)
 
+    overflow_day, list_of_beds_and_days = [], []
+
+    if do_threading:
+        p = Pool(processes=100)
+        for beds_and_days in tqdm(p.imap_unordered(worker, range(number_of_simulation)), total=number_of_simulation):
+            list_of_beds_and_days.append(beds_and_days)
+        # list_of_beds_and_days = p.map(worker, range(number_of_simulation))
+        p.close()
+        p.join()
+
+    # Linear code without multiprocessing
+    else:
+        for i in tqdm(range(number_of_simulation)):
+            beds, days = model(i, number_of_days, population, total_beds)
+            list_of_beds_and_days.append((beds,days))
+
+    # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital
+    #                         beds will become vacant.
+    #This patch gives the percentage of vacant beds for the nth simulation day
+
+
+    for beds, days in list_of_beds_and_days:
         if beds[-1] < 0:
             prob_vacant = 0
         else:
-            prob_vacant = (beds[-1] / total_beds)
+            prob_vacant = (beds[-1] * 1.0 / total_beds)
+        perc_vacant_beds.append(prob_vacant*100) #Hypothesis - 2 output (can be seen in plots)
 
-        print(prob_vacant)
-        prob_vacant_beds.append(prob_vacant)
+
+    # Hypothesis-1 : If the number of hospital beds is doubled, there will never be an overflow in available number of beds.
+    # This patch gives the day on which the number of beds hits zero and appends that day number in overflow_day list
+    # which is later plotted accordingly.
+
+    # For Hypothesis - 1
+
         for j in range(len(beds)):
             if beds[j] < 0:
-                index = j
+                overflow_day.append(j)
                 count += 1
                 break
-        i += 1
-    probability = count / number_of_simulation
-    percent_vacant_bed = sum(prob_vacant_beds) / len(prob_vacant_beds)
-    print('The Probability of vacant beds is:', probability)
 
+    probability = count / number_of_simulation
+
+    print('The Probability of hospital beds overflowing is: ', probability) # Hypothesis - 1 output
+
+    return overflow_day, list_of_beds_and_days, perc_vacant_beds
 if __name__ == '__main__':
+
+
+    # Inputs for testing hypothesis
+    # Hypothesis -1
+    #               Before:
+    #                           population = 2710000 (Chicago area)
+    #                           total beds = 33000 (Chicago area)
+    #                           simulation = 1000
+    #                           number_of days = 45
+    #               After:
+    #                           population = 2710000 (Chicago area)
+    #                           total beds = 66000 (Chicago area)
+    #                           simulation = 1000
+    #                           number_of days = 45
+
+    # Hypothesis - 2
+    #               Before:
+    #                           population = 2710000 (Chicago area)
+    #                           total beds = 33000 (Chicago area)
+    #                           simulation = 1000
+    #                           number_of days = 45
+    #               After:
+    #                           population = 203250(Chicago area)
+    #                           total beds = 66000 (Chicago area)
+    #                           simulation = 1000
+    #                           number_of days = 45
+
+
+
 
     population = int(input("Enter the total population to be considered: "))
     total_beds = int(input("Enter the number of beds to be considered: "))
     simulations = int(input("Enter the number of simulations to be considered: "))
     number_of_days = int(input("Enter the number of days to be considered: "))
 
-    simulation(number_of_days, simulations, population, total_beds)
 
-    pylab.ylabel('Available Beds')
-    pylab.xlabel('Number of Days')
-    pylab.show()
+    import time
+
+    start = time.time()
+    overflow_day, list_of_beds_and_days, perc_vacant_beds  = simulation(number_of_days, simulations, population, total_beds, True)
+    print("Simulation time: %f"%(time.time() - start))
+
+# Plot for Hypothesis - 1
+    plt.hist(overflow_day, bins=10)
+    plt.ylabel('Frequency')
+    plt.xlabel('Number of Days until Overflow')
+    plt.savefig('overflow-days-hist.png')
+    plt.clf()
+
+# Plot for Hypothesis - 2
+    plt.hist(perc_vacant_beds, bins = 10)
+    plt.ylabel('Percentage')
+    plt.xlabel('% vacant beds')
+    plt.savefig('percent_vacant_beds-hist.png')
+    plt.clf()
+
+# Simulation Plot
+    for beds, days in list_of_beds_and_days:
+        plt.plot(days, beds)
+    plt.ylabel('Available Beds')
+    plt.xlabel('Number of Days')
+    plt.savefig('beds-vs-days.png')
+    plt.clf()
+
