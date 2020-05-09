@@ -20,7 +20,8 @@ from multiprocessing import Pool
 from functools import partial
 from tqdm import tqdm
 
-def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
+
+def ran_pert_dist(minimum: float, most_likely: float, maximum: float, confidence: float, samples: int) -> float:
     """Produce random numbers according to the 'Modified PERT' distribution.
 
         :param minimum: The lowest value expected as possible.
@@ -53,7 +54,8 @@ def ran_pert_dist(minimum, most_likely, maximum, confidence, samples):
     beta = beta * (maximum - minimum) + minimum
     return beta
 
-class Variables():
+
+class Variables:
     """
         This class contains all the variables which are resposible for the COVID-19 spread
         According to SEIR model:
@@ -63,8 +65,8 @@ class Variables():
         R = Result
         """
     # concept of transition between compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
-
-    def s_e(): # s = Suceptibility    ;   e= Exposed
+    @staticmethod
+    def s_e():  # s = Susceptibility    ;   e= Exposed
         """
         Infectious Rate (Beta= = R1 * Gamma) based on the pert distribution
         :return: Infectious Rate
@@ -76,10 +78,11 @@ class Variables():
         Pass
         """
         # infectious rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
-        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000))) # beta
+        infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1000)))  # beta
         return infectious_rate
 
-    def e_i(): # e= Exposed;    i = Infectious
+    @staticmethod
+    def e_i():  # e= Exposed;    i = Infectious
         """
         Alpha           =   Incubation Rate = time in which infection is showing symptoms
         Arrival Rate =  Arrival Rate of patients at the hospitals
@@ -95,16 +98,17 @@ class Variables():
         ...         print("False")
         True
         """
-        #incubation rate - https: // www.inverse.com / mind - body / how - long - are - you - infectious - when - you - have - coronavirus, https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
-        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000)) # alpha
-        #arrival rate - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
+        # incubation rate - https: // www.inverse.com / mind - body / how - long - are - you - infectious - when - you - have - coronavirus, https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
+        incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1000))  # alpha
+        # arrival rate - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
         arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1000))
-        #probability of people testing positive for COVID-19 - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
+        # probability of people testing positive for COVID-19 - https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
         prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1000))
         time_test_result = int(np.random.choice(ran_pert_dist(1, 2, 7, confidence=4, samples=1000)))
         return incubation_rate, arrival_rate, prob_positive, time_test_result
 
-    def i_r(): # i= Infectious;    r = Result
+    @staticmethod
+    def i_r():  # i= Infectious;    r = Result
         """
         Time to Outcome = Number of days patient will leave the hospital (Dead / Recovered)
         Outcome Rate      =  Rate at which people are leaving hospital bed (Dead / Recovered)
@@ -123,7 +127,7 @@ class Variables():
         return time_to_outcome, outcome_rate
 
 
-def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
+def admitted_bed(number_of_days: int, new_days: list, lst_outcome: list, lst_day_out: list, lst_hospitalized: list, number_of_beds: int) -> tuple:
     """
         beds_available = Number of available beds
         :param number_of_days:  Number days of the pendemic we want to test on
@@ -145,9 +149,8 @@ def admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospita
     beds_available = available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds)
     return beds_available
 
-    # print("Admitted beds: ", admitted_beds)
 
-def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds):
+def available_bed(number_of_days: int, lst_outcome: list, lst_day_out: list, number_of_beds: list, admitted_beds: list) -> tuple:
     """
         available_beds : This function gives the number of available beds after admitting the patients. It keeps on updating the
         number of available beds based on the admitted patients and  outcome patients.
@@ -160,22 +163,23 @@ def available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admi
         >>> available_bed(2, [40,28],[23,33], [2000, 1900], [345, 400])
         ([385, 428], [0, 1])
         """
-    X_num_days = []
-    Y_available_beds = []
+    x_num_days = []
+    # Y_available_beds = []
     available_beds = []
     for i in range(number_of_days):
-        X_num_days.append(i)
-        # simulation_df['x'] = X_num_days
+        x_num_days.append(i)
+        # simulation_df['x'] = x_num_days
         for j in range(lst_day_out[i] + 1):
             if j == lst_day_out[i]:
                 admitted_beds[i] = admitted_beds[i] + lst_outcome[i]
                 available_beds.append(admitted_beds[i])
-    Y_available_beds = available_beds
+    # Y_available_beds = available_beds
     # simulation_df['y'] = available_beds
     # print('available beds: ', available_beds)
-    return available_beds, X_num_days
+    return available_beds, x_num_days
 
-def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds):
+
+def test_result_days(lst_day: list, lst_time_to_outcome: list, number_of_days: int, new_days: list, lst_outcome: list, lst_day_out: list, lst_hospitalized: list, number_of_beds: int) -> tuple:
     """
         avail_beds =
         :param lst_day: List of nth days when test result are coming out
@@ -201,18 +205,20 @@ def test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst
     avail_beds, num_days = admitted_bed(number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return avail_beds, num_days
 
-def model(simulation_id, number_of_days, population, total_beds):
+
+def model(simulation_id: int, number_of_days: int, population: int, total_beds: int) -> tuple:
     """
-        :param number_of_days: number of days simulation has to run for
-        :param population: general population of the region
-        :param total_beds: total number of hospital beds available in the region
-        :return: bed_count: list of available beds
+        :param simulation_id: Number of days simulation has to run for
+        :param number_of_days: Number of days simulation has to run for
+        :param population: General population of the region
+        :param total_beds: Total number of hospital beds available in the region
+        :return: bed_count: List of available beds
         >>> model(1, 2, 200, 100)
         ([100.0, 100.0], [0, 1])
         """
-    #concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
+    # concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
     np.random.seed(simulation_id)
-    number_of_beds = total_beds # beds in champaign
+    number_of_beds = total_beds  # beds in Chicago
     total_population = population
     exposed = 1.0
     susceptible = total_population
@@ -229,37 +235,24 @@ def model(simulation_id, number_of_days, population, total_beds):
     lst_hospitalized = []
 
     for i in range(number_of_days):
-
         susceptible = susceptible - int(Variables.s_e())*infected*susceptible
-
         incub_rate, arr_rate, prob_pos, test_result_time = Variables.e_i()
-
-        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05 #people getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
-
+        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05  # People getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
         day = day + test_result_time
-
         infected = arr_rate * prob_pos * exposed
-
         lst_infected.append(infected)
-        # Y_available_beds = lst_infected
-
-        hospitalized = int(infected*(17/100)) # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+        hospitalized = int(infected*(17/100))  # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
-        # Y_available_beds = lst_hospitalized
-
-
         outcome_time, rate_outcome = Variables.i_r()
-
         outcome = rate_outcome * hospitalized
-
         lst_outcome.append(outcome)
-
         lst_day.append(test_result_time)
         lst_time_to_outcome.append(outcome_time)
     bed_count, num_days = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
     return bed_count, num_days
 
-def simulation(number_of_days, number_of_simulation, population, total_beds, do_threading=True):
+
+def simulation(number_of_days : int, number_of_simulation : int, population : int, total_beds : int, do_threading=True):
     """
     :param number_of_days: number of days simulation has to run for
     :param number_of_simulation: Total number of simulations
@@ -276,7 +269,8 @@ def simulation(number_of_days, number_of_simulation, population, total_beds, do_
 
     worker = partial(model, number_of_days=number_of_days, population=population, total_beds=total_beds)
 
-    overflow_day, list_of_beds_and_days = [], []
+    overflow_day = []
+    list_of_beds_and_days = []
 
     # starting Multiprocessing
     if do_threading:
@@ -286,15 +280,14 @@ def simulation(number_of_days, number_of_simulation, population, total_beds, do_
         # list_of_beds_and_days = p.map(worker, range(number_of_simulation))
         p.close()
         p.join()
-        #Linear code without multiprocesing
+        # Linear code without Multiprocessing
     else:
         for i in tqdm(range(number_of_simulation)):
             beds, days = model(i, number_of_days, population, total_beds)
-            list_of_beds_and_days.append((beds,days))
-# Hypothesis -2: -If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital
-#                 beds will become vacant.
-#This patch gives the percentage of vacant beds for the nth simulation day
+            list_of_beds_and_days.append((beds, days))
 
+    # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lock down, 50% of the total hospital beds will become vacant.
+    # This patch gives the percentage of vacant beds for the nth simulation day
 
     for beds, days in list_of_beds_and_days:
         if beds[-1] < 0:
@@ -312,12 +305,11 @@ def simulation(number_of_days, number_of_simulation, population, total_beds, do_
                 overflow_day.append(j)
                 count += 1
                 break
-
     probability = count / number_of_simulation
     # percent_vacant_bed = (sum(perc_vacant_beds) / len(perc_vacant_beds))*100
-    print('The Probability of vacant beds is:', probability , '%')
-
+    print('The Probability of vacant beds is:', probability, '%')
     return overflow_day, list_of_beds_and_days, perc_vacant_beds
+
 
 if __name__ == '__main__':
     # Inputs for testing hypothesis
@@ -345,20 +337,20 @@ if __name__ == '__main__':
     #                           simulation = 1000
     #                           number_of days = 45
 
-    population = int(input("Enter the total population to be considered: ")) #     Chicago_population  = 2710000
-    total_beds = int(input("Enter the number of beds to be considered: ")) # total_beds in Chicago      = 33000
-    simulations = int(input("Enter the number of simulations to be considered: ")) # Simulation         = 10000 (can select any number of simulation)
-    number_of_days = int(input("Enter the number of days to be considered: ")) # number_of_days   = 45
+    population = int(input("Enter the total population to be considered: "))  # Chicago_population  = 2710000
+    total_beds = int(input("Enter the number of beds to be considered: "))  # total_beds in Chicago      = 33000
+    simulations = int(input("Enter the number of simulations to be considered: "))  # Simulation= (Select any Number)
+    number_of_days = int(input("Enter the number of days to be considered: "))  # number_of_days   = 45
 
     import time
 
     start = time.time()
     overflow_day, list_of_beds_and_days, perc_vacant_beds = simulation(number_of_days, simulations, population, total_beds, True)
-    print("Simulation time: %f"%(time.time() - start))
+    print("Simulation time: %f" % (time.time() - start))
 
 
 # Plot for Hypothesis - 2
-    plt.hist(perc_vacant_beds, bins = 10)
+    plt.hist(perc_vacant_beds, bins=10)
     plt.ylabel('Percentage')
     plt.xlabel('% vacant beds')
     plt.savefig('percent_vacant_beds-hist.png')
@@ -375,4 +367,3 @@ if __name__ == '__main__':
     plt.xlabel('Number of Days')
     plt.savefig('beds-vs-days.png')
     plt.clf()
-
