@@ -60,7 +60,7 @@ class Variables:
         This class contains all the variables which we are considering for our simulation
         According to our SEIR model:
         S = Susceptible
-        E= Exposed
+        E = Exposed
         I = Infected
         R = Result (used interchangeably with the term outcome in the code)
         """
@@ -69,8 +69,8 @@ class Variables:
     def s_e():  # s = Susceptible    ;   e= Exposed
         """
         Computes each variable required for transition between Suceptible(S) and Exposed(E) compartments
-        Infectious Rate (Beta) = R1 * Outcome Rate where R1 (Reproduction Rate) = 1 (due to social distancing)
-        Reproduction rate values assuming strict social distancing - https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york, https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
+        Infectious Rate (Beta) = R1 * Outcome Rate, where R1 (Reproduction Rate) = 1 (due to social distancing)
+        Reproduction rate value is based on assumption of strict social distancing - https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york, https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
         Infectious Rate is the rate of transmission of the virus
         :return: Infectious Rate
         >>> infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1)))
@@ -118,7 +118,8 @@ class Variables:
         """
         Computes each variable required for transition between Infected(I) and Result(R) compartments
         Time to Outcome = Number of days in which recovered/dead patients will leave the hospital
-        Outcome Rate = Rate at which recovered/dead patients are leaving hospital bed
+        Outcome Rate = 1/Infectious Period, where Infectious Period indicates the duration of infection after which the patient either recovers/dies
+        Outcome Rate is the rate at which recovered/dead patients are leaving hospital beds
         :return: Time to Outcome, Outcome Rate
         >>> time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1)))
         >>> outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1))
