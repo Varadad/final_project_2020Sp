@@ -126,7 +126,7 @@ The following plot gives the available number of vacant beds in the hospitals
 If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will become vacant.
 
 
-Test-1: Before doubling the number of beds
+Test-1: Before the implementation of lockdown
 
 The following plot shows the simulation results depecting how beds in hospitals are occupied and how they will overflow after certain time.
 
@@ -138,7 +138,7 @@ The following plot shows on which day the hospitals are most probable of getting
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
 
-Test-2
+Test-2: After the implementation of lockdown
 
 The following plot shows the simulation when the population was reduced by 25% then how the beds in hospitals are occupied and it shows that they do overflow.
 
@@ -153,15 +153,25 @@ Finally, we see on which day hospitals are getting overflow.
 
 ## References:
 https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
+
 https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york
+
 https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
+
 https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
+
 https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
+
 https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
+
 https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
+
 https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
+
 https://gis.cdc.gov/grasp/covidnet/COVID19_3.html
+
 https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+
 https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
 
 
