@@ -1,22 +1,22 @@
 # Final Project PR Spring 2020
 
-##**Monte Carlo Simulation on Hospital Capacity during COVID-19**##
+## Monte Carlo Simulation on Hospital Capacity during COVID-19
 
 
-##**Team Members- Rohit Sanvaliya, Tanya Gupta, Varad Deshpande**##
+## Team Members- Rohit Sanvaliya, Tanya Gupta, Varad Deshpande
 
-###**The need for this project from the perspective of hospitals**###
+## The need for this project from the perspective of hospitals
 
 COVID-19 came into this world without any warning or signs. This unannounced global pandemic was something the hospitals weren't prepared for and has called for crisis management measures. The hospitals have to make do with the available resources and make sure that there is maximum utilization of these resources to test and treat the patients that need urgent care. Our project witnesses a model called the SEIR model (Susceptible-Exposed-Infected-Result model) inspired from the SEIR model (Susceptible-Exposed-Infected-Recovered model). In our model, the R stands for result which includes people who are recovering as well as dying from COVID-19 compared to the R in the original SEIR model which stands for just the people who have recovered. Our model considers the various aspects of COVID-19, the statistics and data related to these aspects and then simulates the possibility of hospital beds overflowing for a fixed population and a fixed number of beds for a given number of days. This can prove to be helpful for hospitals in planning, managing and foreseeing the utilization of resources in these trying times enabling the healthworkers to drive their attention towards enhancing the diagnosis of the COVID-19 patients.
 
-###**Model for the simulation**###
+
+## Model for the simulation
 
 SEIR model is a compartmental model where each compartment dentots the number of people in that compartment. 
 
 The model is as follows: S --𝛽--> E --𝛼--> I --𝛾--> R
 
 We have fit suitable variables in the model and altered the calculations for each transitional variable to get accurate results.
-
 
 Susceptible (S): 100% of the population is Susceptible to COVID-19
 
@@ -27,8 +27,8 @@ Infected (I): Total population exposed to the virus and got Infection
 Result (R): Patients who has vacated the hospital bed either by recovery or death
 
 
+## Simulation Variables
 
-###**Simulation Variables**###
 Infectious Rate (𝛽) = 𝑅_1* 𝛾  (𝑅_1 – Reproduction Rate when social distancing is followed, 𝛾 – Recovery Rate)
 
 Incubation Rate (𝛼) = 1/Incubation Period (Incubation Period – The duration after which the patients show symptoms after being exposed)
@@ -44,7 +44,8 @@ Service time distribution of testing kits – The time taken to receive test res
 Time to outcome - It is the time taken by patients to get either recover or for their unfortunate death
 
 
-###**Assumptions or Starting state for the Model**###
+## Assumptions or Starting state for the Model
+
 Fixed number of hospital beds
 
 Fixed population around the hospital
@@ -60,7 +61,8 @@ Testing kits used are 100% accurate
 Recovered patients are not getting re-infected
 
 
-###**Compartmental Equations**###
+## Compartmental Equations
+
 Each compartment in the our model gives the number of people in that compartment
 
 Our inspired model has the following compartment definitions – 
@@ -75,15 +77,14 @@ Hospitalized_𝑛 = 0.17* Infected_𝑛  ++
 
 Result_𝑛 = 𝛾* Hospitalized_𝑛
 
-
 + The value 0.05 is the probability that people will come in contact with each other despite social distancing
 
 ++ The value 0.17 is the probability of the total infected people being hospitalized
 
 
-##**Hypotheses**##
+## Hypotheses
 
-###**Hypothesis-1**###
+## Hypothesis-1
 
 If the number of hospital beds is doubled, there will never be an overflow.
 
@@ -116,7 +117,7 @@ The following plot gives the available number of vacant beds in the hospitals
 
 **Conclusion**: Hypothesis-1 has passed
 
-###**Hypothesis-2**###
+## Hypothesis-2
 
 Test-1: Before doubling the number of beds
 
@@ -141,7 +142,7 @@ Finally, we see on which day hospitals are getting overflow.
 
 **Conclusion**: Hypothesis-2 is false. 
 
-###**References**:
+## References:
 https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
 https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
 https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
@@ -152,5 +153,6 @@ https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coro
 https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
 https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
 
-#**Work Distribution**
+## Work Distribution:
+Varad contributed towards developing the appropriate model, coming up with the appropriate formulae and code development. Tanya helped in figuring out the distributions for each random variable,  
 
