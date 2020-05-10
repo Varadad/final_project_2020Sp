@@ -12,7 +12,7 @@ COVID-19 came into this world without any warning or signs. This unannounced glo
 
 ## Model for the simulation
 
-SEIR model is a compartmental model where each compartment dentots the number of people in that compartment. 
+SEIR model is a compartmental model where each compartment denotes the number of people in that compartment. 
 
 The model is as follows: S --𝛽--> E --𝛼--> I --𝛾--> R
 
@@ -20,11 +20,11 @@ We have fit suitable variables in the model and altered the calculations for eac
 
 Susceptible (S): 100% of the population is Susceptible to COVID-19
 
-Exposed (E): Number of people who has contracted the virus. We considered the social distancing and incubation rate (5%) of the Exposed
+Exposed (E): Number of people who have contracted the virus. We considered the social distancing and incubation rate (5%) of the Exposed
 
-Infected (I): Total population exposed to the virus and got Infection
+Infected (I): Total number of people that got infected
 
-Result (R): Patients who has vacated the hospital bed either by recovery or death
+Result (R): Patients who have vacated the hospital bed either due to their recovery or death
 
 
 ## Simulation Variables
@@ -33,7 +33,7 @@ Infectious Rate (𝛽) = 𝑅_1* 𝛾  (𝑅_1 – Reproduction Rate when social
 
 Incubation Rate (𝛼) = 1/Incubation Period (Incubation Period – The duration after which the patients show symptoms after being exposed)
 
-Recovery Rate (𝛾) = 1/Infectious Period (Infectious Period – The duration in which the patient is capable of spreading COVID-19)
+Outcome (Result) Rate (𝛾) = 1/Infectious Period (Infectious Period – The duration in which the patient is capable of spreading COVID-19)
 
 Arrival Rate of people to be tested – The rate at which potential infected people are arriving in the hospital
 
@@ -41,22 +41,22 @@ Probability of people testing positive for COVID-19 – Positive specimens out o
 
 Service time distribution of testing kits – The time taken to receive test results for COVID-19
 
-Time to outcome - It is the time taken by patients to get either recover or for their unfortunate death
+Time to outcome (result) - It is the time taken by patients to either recover or for their unfortunate death
 
 
-## Assumptions or Starting state for the Model
+## Assumptions and Starting state for the Model
 
 Fixed number of hospital beds
 
 Fixed population around the hospital
 
-Zero COVID-19 patients in the hospital
+Zero COVID-19 patients in the hospital initially
 
-Hospital can accommodate any arrival rate 
+Hospital(s) can accommodate any arrival rate 
 
-Social distancing is followed at its fullest
+Social distancing is followed strictly
 
-Testing kits used are 100% accurate
+Testing kits used are 100% accurate (No false positive or false negative results)
 
 Recovered patients are not getting re-infected
 
@@ -67,15 +67,15 @@ Each compartment in the our model gives the number of people in that compartment
 
 Our inspired model has the following compartment definitions – 
 
-Susceptible_𝑛 = Susceptibl_(𝑛−1) - (𝛽*Infected_(𝑛−1)* Susceptible_(𝑛−1))
+Susceptible_𝑛 = Susceptible_(𝑛−1) - (𝛽 * Infected_(𝑛−1) * Susceptible_(𝑛−1))
 
-Exposed_𝑛 = (Exposed_(𝑛−1)- (𝛼* Exposed_(𝑛−1)))*0.05  +
+Exposed_𝑛 = {Exposed_(𝑛−1) - (𝛼 * Exposed_(𝑛−1))} * 0.05  +
 
-Infected_𝑛 = (Arrival Rate of people to be tested* Probability of people testing positive for COVID-19* Exposed_𝑛)
+Infected_𝑛 = (Arrival Rate of people to be tested * Probability of people testing positive for COVID-19 * Exposed_𝑛)
 
-Hospitalized_𝑛 = 0.17* Infected_𝑛  ++
+Hospitalized_𝑛 = 0.17 * Infected_𝑛  ++
 
-Result_𝑛 = 𝛾* Hospitalized_𝑛
+Result_𝑛 = 𝛾 * Hospitalized_𝑛
 
 + The value 0.05 is the probability that people will come in contact with each other despite social distancing
 
@@ -84,27 +84,30 @@ Result_𝑛 = 𝛾* Hospitalized_𝑛
 
 ## Hypotheses
 
+Our analysis is conducted on the Chicago area with population of 2.71 million and number of hospital beds being around 33000.
+
+We have considered a fixed time period of 60 days forour simulation.
+
+Using this, we ran 1000 simulations to test the hypothesis.
+
 ## Hypothesis-1
 
 If the number of hospital beds is doubled, there will never be an overflow.
 
-Our analysis is conducted on the Chicago area with population of 2.71 million and number of hospital beds to be around 33000.
-
-Using this we ran simulations 10000 times to test the hypothesis.
 
 Test-1: Before doubling the number of beds
 
-The following plot shows the simulation results depecting how beds in hospitals are occupied and how they will overflow after certain time.
+The following plot shows the simulation results depicting how beds in hospitals are occupied and how they will overflow after certain time.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1b-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
-The following plot shows on which day the hospitals are most probable of getting overflow.
+The following plot shows on which day the hospitals are most probable of overflowing.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
-Test-2: After Doubling the number of beds
 
+Test-2: After Doubling the number of beds
 
 The following plot shows the number of available beds once they are doubled
 
@@ -115,9 +118,13 @@ The following plot gives the available number of vacant beds in the hospitals
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds")
 
-**Conclusion**: Hypothesis-1 has passed
+**Conclusion**: Hypothesis-1 is true. Thus, if the number of beds are doubled, there will never be an overflow.
+
 
 ## Hypothesis-2
+
+If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will become vacant.
+
 
 Test-1: Before doubling the number of beds
 
@@ -129,6 +136,7 @@ The following plot shows the simulation results depecting how beds in hospitals 
 The following plot shows on which day the hospitals are most probable of getting overflow.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
+
 
 Test-2
 
@@ -142,6 +150,7 @@ Finally, we see on which day hospitals are getting overflow.
 
 **Conclusion**: Hypothesis-2 is false. 
 
+
 ## References:
 https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
 https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
@@ -151,8 +160,9 @@ https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA
 https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/05012020/covid-like-illness.html
 https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
 https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
-https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+https://gis.cdc.gov/grasp/covidnet/COVID19_3.html
+https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+
 
 ## Work Distribution:
-Varad contributed towards developing the appropriate model, coming up with the appropriate formulae and code development. Tanya helped in figuring out the distributions for each random variable,  
-
+Varad contributed towards developing the model, coming up with the appropriate formulae and code development. Tanya helped in figuring out the distributions for each random variable, created meaningful visualizations for each hypothesis and enabled the efficient implementation of Travis CI. Rohit created sensible doctstrings and doctests for each function, added necessary comments in the code and optimized the speed of the overall code followed by implementation of Multiprocessing for the efficient and rapid execution of the simulations. Rohit and Tanya together ensured the addition of inline citations, looked after the intuitive naming of the variables and functions, and provided a clear structure to the code. The presentation was a collective effort of all the three members of the team.
