@@ -131,7 +131,7 @@ class Variables:
         """
         # time_to_outcome, outcome_rate - https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
         time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1000)))
-        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000))  # gamma
+        outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1000))
         return time_to_outcome, outcome_rate
 
 
@@ -246,10 +246,10 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
     for i in range(number_of_days):
         susceptible = susceptible - int(Variables.s_e())*infected*susceptible
         incub_rate, arr_rate, prob_pos, test_result_time = Variables.e_i()
-        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05  # People getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
+        exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05  # People getting exposed after social distancing - https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
         day = day + test_result_time
         infected = arr_rate * prob_pos * exposed
-        hospitalized = int(infected*(17/100))  # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
+        hospitalized = int(infected*(17/100))  # People who require hospitalization - https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
         outcome_time, rate_outcome = Variables.i_r()
         outcome = rate_outcome * hospitalized
@@ -292,6 +292,7 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
 
         p.close()
         p.join()
+
         # Linear code without Multiprocessing
     else:
         for i in tqdm(range(number_of_simulation)):
@@ -323,7 +324,7 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
 
 if __name__ == '__main__':
 
-    # Inputs for testing hypothesis
+    # Inputs for testing hypotheses
     # Hypothesis -1
     #               Before:
     #                           population = 2710000 (Chicago area)
