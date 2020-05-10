@@ -330,24 +330,24 @@ if __name__ == '__main__':
     #                           population = 2710000 (Chicago area)
     #                           total beds = 33000 (Chicago area)
     #                           simulation = 1000
-    #                           number_of days = 45
+    #                           number_of days = 60
     #               After:
     #                           population = 2710000 (Chicago area)
     #                           total beds = 66000 (Chicago area)
     #                           simulation = 1000
-    #                           number_of days = 45
+    #                           number_of days = 60
 
     # Hypothesis - 2
     #               Before:
     #                           population = 2710000 (Chicago area)
     #                           total beds = 33000 (Chicago area)
     #                           simulation = 10000
-    #                           number_of days = 45
+    #                           number_of days = 60
     #               After:
     #                           population = 203250(Chicago area)
     #                           total beds = 33000 (Chicago area)
     #                           simulation = 10000
-    #                           number_of days = 45
+    #                           number_of days = 60
 
     population = int(input("Enter the total population to be considered: "))  # Chicago_population  = 2710000
     total_beds = int(input("Enter the number of beds to be considered: "))  # total_beds in Chicago      = 33000
