@@ -250,7 +250,7 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
     return bed_count, num_days
 
 
-def simulation(number_of_days : int, number_of_simulation : int, population : int, total_beds : int, do_threading=True):
+def simulation(number_of_days: int, number_of_simulation: int, population: int, total_beds: int, do_threading=True):
     """
     :param number_of_days: number of days simulation has to run for
     :param number_of_simulation: Total number of simulations
@@ -270,7 +270,6 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
     overflow_day = []
     list_of_beds_and_days = []
 
-
     # starting Multiprocessing
     if do_threading:
         p = Pool(processes=4)
@@ -285,8 +284,6 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
             beds, days = model(i, number_of_days, population, total_beds)
             list_of_beds_and_days.append((beds, days))
 
-
-
     # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lock down, 50% of the total hospital beds will become vacant.
     # This patch gives the percentage of vacant beds for the nth simulation day
 
@@ -296,7 +293,6 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
         else:
             prob_vacant = (beds[-1] * 1.0 / total_beds)
         perc_vacant_beds.append(prob_vacant*100)
-
 # Hypothesis-1 : If the number of hospital beds is doubled, there will never be an overflow in available number of beds.
 # This patch gives the day on which the number of beds hits zero and appends that day number in overflow_day list
 # which is later plotted accordingly.
@@ -313,6 +309,7 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
 
 
 if __name__ == '__main__':
+
     # Inputs for testing hypothesis
     # Hypothesis -1
     #               Before:
@@ -343,13 +340,11 @@ if __name__ == '__main__':
     simulations = int(input("Enter the number of simulations to be considered: "))  # Simulation= (Select any Number)
     number_of_days = int(input("Enter the number of days to be considered: "))  # number_of_days   = 60
 
-
     import time
 
     start = time.time()
-    overflow_day, list_of_beds_and_days, perc_vacant_beds  = simulation(number_of_days, simulations, population, total_beds, True)
+    overflow_day, list_of_beds_and_days, perc_vacant_beds = simulation(number_of_days, simulations, population, total_beds, True)
     print("Simulation time: %f" % (time.time() - start))
-
 
     # Plot for Hypothesis - 2
     # This plot is only used when the Hypothesis -2 is getting tested
@@ -367,8 +362,7 @@ if __name__ == '__main__':
     plt.title("nth Day When Beds Overflows")
     plt.savefig('overflow-days-hist.png')
 
-
-    #Plot for simulation
+    # Plot for simulation
     for beds, days in list_of_beds_and_days:
         plt.plot(days, beds)
     plt.ylabel('Available Beds')
