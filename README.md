@@ -86,7 +86,7 @@ Result_𝑛 = 𝛾 * Hospitalized_𝑛
 
 Our analysis is conducted on the Chicago area with population of 2.71 million and number of hospital beds being around 33000.
 
-We have considered a fixed time period of 60 days forour simulation.
+We have considered a fixed time period of 60 days for our simulation.
 
 Using this, we ran 1000 simulations to test the hypothesis.
 
