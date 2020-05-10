@@ -1,4 +1,4 @@
-#**Final Project PR Spring 2020**#
+# Final Project PR Spring 2020
 
 ##**Monte Carlo Simulation on Hospital Capacity during COVID-19**##
 
