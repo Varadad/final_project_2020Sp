@@ -69,15 +69,15 @@ Our inspired model has the following compartment definitions –
 
 Susceptible_𝑛 = Susceptible_(𝑛−1) - (𝛽 * Infected_(𝑛−1) * Susceptible_(𝑛−1))
 
-Exposed_𝑛 = {Exposed_(𝑛−1) - (𝛼 * Exposed_(𝑛−1))} * 0.05  +
+Exposed_𝑛 = {Exposed_(𝑛−1) - (𝛼 * Exposed_(𝑛−1))} * 0.05  +++
 
 Infected_𝑛 = (Arrival Rate of people to be tested * Probability of people testing positive for COVID-19 * Exposed_𝑛)
 
 Hospitalized_𝑛 = 0.17 * Infected_𝑛  ++
 
-Result_𝑛 = 𝛾 * Hospitalized_𝑛
+Result_𝑛 = Outcome_Rate * Hospitalized_𝑛
 
-+ The value 0.05 is the probability that people will come in contact with each other despite social distancing
++++ The value 0.05 is the probability that people will come in contact with each other despite social distancing
 
 ++ The value 0.17 is the probability of the total infected people being hospitalized
 
@@ -92,10 +92,10 @@ Using this, we ran 1000 simulations to test the hypothesis.
 
 ## Hypothesis-1
 
-If the number of hospital beds is doubled, there will never be an overflow.
+**If the number of hospital beds is doubled, there will never be an overflow.**
 
 
-Test-1: Before doubling the number of beds
+**Test-1**: Before doubling the number of beds
 
 The following plot shows the simulation results depicting how beds in hospitals are occupied and how they will overflow after certain time.
 
@@ -107,15 +107,16 @@ The following plot shows on which day the hospitals are most probable of overflo
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
 
-Test-2: After Doubling the number of beds
+**Test-2**: After Doubling the number of beds
 
-The following plots shows the number of available beds once they are doubled 
+The following plots shows the number of available beds once they are doubled. 
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
-The following plot gives the available number of vacant beds in the hospitals and how they are not getting over
-As the beds are not getting overflow this graph shows no value for the nth day when hospitals reach their limits
+The following plot gives the available number of vacant beds in the hospitals and how they are not overflowing.
+
+As the beds are not overflowing this graph shows no value for the nth day for the entire simulation.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-overflow-days-hist.png?raw=true "Overflow day Hist")
 
@@ -126,12 +127,12 @@ As the beds are not getting overflow this graph shows no value for the nth day w
 
 ## Hypothesis-2
 
-If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will become vacant.
+**If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will become vacant.**
 
 
-Test-1: Before the implementation of lockdown
+**Test-1**: Before the implementation of lockdown
 
-The following plot shows the simulation results depecting how beds in hospitals are occupied and how they will overflow after certain time.
+The following plot shows the simulation results depicting how beds in hospitals are occupied and how they will overflow after certain time.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-beds-vs-days.png?raw=true "Available beds vs Days")
 
@@ -141,13 +142,13 @@ The following plot shows on which day the hospitals are most probable of overflo
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
 
-Test-2: After the implementation of lockdown
+**Test-2**: After the implementation of lockdown
 
 The following plot shows the simulation when the population was reduced by 25% then how the beds in hospitals are occupied and it shows that they do overflow.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-beds-vs-days.png?raw=true "Available beds vs Days")
 
-In the following plot we can see that percent vacant beds is zero, i.e. there is an overflow
+In the following plot we can see that percentage of vacant beds is zero for the entire simulation, i.e. there is an overflow
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds Hist")
 
