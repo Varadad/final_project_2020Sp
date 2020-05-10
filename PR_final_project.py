@@ -217,7 +217,6 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
         ([100.0, 100.0], [0, 1])
         """
     # concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
-    np.random.seed(simulation_id)
     number_of_beds = total_beds  # beds in Chicago
     total_population = population
     exposed = 1.0
@@ -226,7 +225,6 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
     day = 0
     hospitalized = 0
 
-    lst_infected = []
     lst_outcome = []
     lst_time_to_outcome = []
     lst_day = []
@@ -240,7 +238,6 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
         exposed = (Variables.s_e() * susceptible - incub_rate * exposed)*0.05  # People getting exposed after social distancing #https://github.com/covid19-bh-biostats/seir/blob/master/SEIR/model_configs/basic
         day = day + test_result_time
         infected = arr_rate * prob_pos * exposed
-        lst_infected.append(infected)
         hospitalized = int(infected*(17/100))  # people who require hospitalization: https://gis.cdc.gov/grasp/covidnet/COVID19_3.html ; https://en.as.com/en/2020/04/12/other_sports/1586725810_541498.html
         lst_hospitalized.append(hospitalized)
         outcome_time, rate_outcome = Variables.i_r()
@@ -249,6 +246,7 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
         lst_day.append(test_result_time)
         lst_time_to_outcome.append(outcome_time)
     bed_count, num_days = test_result_days(lst_day, lst_time_to_outcome, number_of_days, new_days, lst_outcome, lst_day_out, lst_hospitalized, number_of_beds)
+
     return bed_count, num_days
 
 
@@ -272,9 +270,10 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
     overflow_day = []
     list_of_beds_and_days = []
 
+
     # starting Multiprocessing
     if do_threading:
-        p = Pool(processes=100)
+        p = Pool(processes=4)
         for beds_and_days in tqdm(p.imap_unordered(worker, range(number_of_simulation)), total=number_of_simulation):
             list_of_beds_and_days.append(beds_and_days)
         # list_of_beds_and_days = p.map(worker, range(number_of_simulation))
@@ -285,6 +284,8 @@ def simulation(number_of_days : int, number_of_simulation : int, population : in
         for i in tqdm(range(number_of_simulation)):
             beds, days = model(i, number_of_days, population, total_beds)
             list_of_beds_and_days.append((beds, days))
+
+
 
     # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lock down, 50% of the total hospital beds will become vacant.
     # This patch gives the percentage of vacant beds for the nth simulation day
@@ -329,41 +330,49 @@ if __name__ == '__main__':
     #               Before:
     #                           population = 2710000 (Chicago area)
     #                           total beds = 33000 (Chicago area)
-    #                           simulation = 1000
+    #                           simulation = 10000
     #                           number_of days = 45
     #               After:
     #                           population = 203250(Chicago area)
-    #                           total beds = 66000 (Chicago area)
-    #                           simulation = 1000
+    #                           total beds = 33000 (Chicago area)
+    #                           simulation = 10000
     #                           number_of days = 45
 
     population = int(input("Enter the total population to be considered: "))  # Chicago_population  = 2710000
     total_beds = int(input("Enter the number of beds to be considered: "))  # total_beds in Chicago      = 33000
     simulations = int(input("Enter the number of simulations to be considered: "))  # Simulation= (Select any Number)
-    number_of_days = int(input("Enter the number of days to be considered: "))  # number_of_days   = 45
+    number_of_days = int(input("Enter the number of days to be considered: "))  # number_of_days   = 60
+
 
     import time
 
     start = time.time()
-    overflow_day, list_of_beds_and_days, perc_vacant_beds = simulation(number_of_days, simulations, population, total_beds, True)
+    overflow_day, list_of_beds_and_days, perc_vacant_beds  = simulation(number_of_days, simulations, population, total_beds, True)
     print("Simulation time: %f" % (time.time() - start))
 
 
-# Plot for Hypothesis - 2
-    plt.hist(perc_vacant_beds, bins=10)
-    plt.ylabel('Percentage')
+    # Plot for Hypothesis - 2
+    # This plot is only used when the Hypothesis -2 is getting tested
+    plt.hist(perc_vacant_beds, bins=15)
+    plt.ylabel('Frequency')
     plt.xlabel('% vacant beds')
+    plt.title("Percent Vacant Beds")
     plt.savefig('percent_vacant_beds-hist.png')
     plt.clf()
-# Plot for Hypothesis - 1
-    plt.hist(overflow_day, bins=15)
+
+    # Plot for Hypothesis - 1
+    plt.hist(overflow_day, bins=10)
     plt.ylabel('Frequency')
     plt.xlabel('Number of Days until Overflow')
+    plt.title("nth Day When Beds Overflows")
     plt.savefig('overflow-days-hist.png')
 
+
+    #Plot for simulation
     for beds, days in list_of_beds_and_days:
         plt.plot(days, beds)
     plt.ylabel('Available Beds')
     plt.xlabel('Number of Days')
+    plt.title("Available Number of Beds")
     plt.savefig('beds-vs-days.png')
     plt.clf()
