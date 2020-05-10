@@ -109,12 +109,15 @@ The following plot shows on which day the hospitals are most probable of overflo
 
 Test-2: After Doubling the number of beds
 
-The following plot shows the number of available beds once they are doubled
+The following plots shows the number of available beds once they are doubled 
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
-The following plot gives the available number of vacant beds in the hospitals
+The following plot gives the available number of vacant beds in the hospitals and how they are not getting over
+As the beds are not getting overflow this graph shows no value for the nth day when hospitals reach their limits
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-overflow-days-hist.png?raw=true "Overflow day Hist")
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds")
 
@@ -133,7 +136,7 @@ The following plot shows the simulation results depecting how beds in hospitals 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
-The following plot shows on which day the hospitals are most probable of getting overflow.
+The following plot shows on which day the hospitals are most probable of overflowing.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
@@ -144,7 +147,11 @@ The following plot shows the simulation when the population was reduced by 25% t
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-beds-vs-days.png?raw=true "Available beds vs Days")
 
-Finally, we see on which day hospitals are getting overflow.
+In the following plot we can see that percent vacant beds is zero, i.e. there is an overflow
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds Hist")
+
+Finally, we see on which day hospitals are overflowing.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
