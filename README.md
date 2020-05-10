@@ -118,7 +118,7 @@ The following plot gives the available number of vacant beds in the hospitals
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds")
 
-**Conclusion**: Hypothesis-1 is true. Thus, if the number of beds are doubled, there will never be an overflow.
+**Conclusion**: Hypothesis-1 is true. Thus, if the number of beds are doubled, there will never be an overflow for the given simulation.
 
 
 ## Hypothesis-2
@@ -148,7 +148,7 @@ Finally, we see on which day hospitals are getting overflow.
 
 ![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
-**Conclusion**: Hypothesis-2 is false. 
+**Conclusion**: Hypothesis-2 is false. As observed, if 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will not become vacant. In fact, the beds are still seen overflowing.
 
 
 ## References:
