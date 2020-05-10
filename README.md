@@ -153,7 +153,8 @@ Finally, we see on which day hospitals are getting overflow.
 
 ## References:
 https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
-https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
+https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york
+https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
 https://www.inverse.com/mind-body/how-long-are-you-infectious-when-you-have-coronavirus
 https://www.medscape.com/answers/2500114-197431/what-is-the-incubation-period-for-coronavirus-disease-2019-covid-19
 https://www.cdc.gov/coronavirus/2019-ncov/covid-data/covidview/index.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fcoronavirus%2F2019-ncov%2Fcovid-data%2Fcovidview.html
