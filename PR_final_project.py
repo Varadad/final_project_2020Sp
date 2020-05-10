@@ -10,8 +10,8 @@ Team members:
                         Tanya Gupta
 Note:
     The ranges of all randomised variables have been taken from real data from various
-    sourses that are cited withing the code as well as in the README document of github
-    repository of github's project repository
+    sources that are cited within the code as well as in the README document of github
+    repository
 
 """
 import numpy as np
@@ -57,18 +57,21 @@ def ran_pert_dist(minimum: float, most_likely: float, maximum: float, confidence
 
 class Variables:
     """
-        This class contains all the variables which are resposible for the COVID-19 spread
-        According to SEIR model:
-        S = Suceptibility
+        This class contains all the variables which we are considering for our simulation
+        According to our SEIR model:
+        S = Susceptible
         E= Exposed
-        I = Infectious
-        R = Result
+        I = Infected
+        R = Result (used interchangeably with the term outcome in the code)
         """
     # concept of transition between compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
     @staticmethod
-    def s_e():  # s = Susceptibility    ;   e= Exposed
+    def s_e():  # s = Susceptible    ;   e= Exposed
         """
-        Infectious Rate (Beta= = R1 * Gamma) based on the pert distribution
+        Computes each variable required for transition between Suceptible(S) and Exposed(E) compartments
+        Infectious Rate (Beta) = R1 * Outcome Rate where R1 (Reproduction Rate) = 1 (due to social distancing)
+        Reproduction rate values assuming strict social distancing - https://www.vox.com/future-perfect/2020/4/15/21217027/coronavirus-social-distancing-flatten-curve-new-york, https://github.com/coronafighter/coronaSEIR/blob/master/main_coronaSEIR.py
+        Infectious Rate is the rate of transmission of the virus
         :return: Infectious Rate
         >>> infectious_rate = np.random.choice(1.0 / (ran_pert_dist(8, 10, 14, confidence=4, samples=1)))
         >>> if   0.072 <= infectious_rate <= 0.125:
@@ -82,12 +85,15 @@ class Variables:
         return infectious_rate
 
     @staticmethod
-    def e_i():  # e= Exposed;    i = Infectious
+    def e_i():  # e= Exposed;    i = Infected
         """
-        Alpha           =   Incubation Rate = time in which infection is showing symptoms
-        Arrival Rate =  Arrival Rate of patients at the hospitals
-        Test Results  =  Time for test results to arrive
-        :return: Incubation Rate, Arrival Rate, Probability of being COVID-19 positive, Test Results
+        Computes each variable required for transition between Exposed(E) and Infected(I) compartments
+        Incubation Rate (Alpha) = 1/Incubation Period, where Incubation Period follows PERT distribution
+        Incubation Rate is the rate at which symptoms start showing, after being exposed to the virus
+        Arrival Rate =  Arrival Rate of patients at the hospitals (follows PERT distribution)
+        Probability of testing positive for COVID-19 follows modified PERT distribution with confidence = 3
+        Test Results  =  Time for test results to arrive (Follows PERT distribution)
+        :return: Incubation Rate, Arrival Rate, Probability of testing positive for COVID-19, Test Results
         >>> incubation_rate = np.random.choice(1.0 / ran_pert_dist(2, 5, 14, confidence=4, samples=1))
         >>> arrival_rate = np.random.choice(ran_pert_dist(1.70, 1.92, 4.46, confidence=4, samples=1))
         >>> prob_positive = np.random.choice(ran_pert_dist(0.10, 0.18, 0.22, confidence=3, samples=1))
@@ -108,10 +114,11 @@ class Variables:
         return incubation_rate, arrival_rate, prob_positive, time_test_result
 
     @staticmethod
-    def i_r():  # i= Infectious;    r = Result
+    def i_r():  # i= Infected;    r = Result
         """
-        Time to Outcome = Number of days patient will leave the hospital (Dead / Recovered)
-        Outcome Rate      =  Rate at which people are leaving hospital bed (Dead / Recovered)
+        Computes each variable required for transition between Infected(I) and Result(R) compartments
+        Time to Outcome = Number of days in which recovered/dead patients will leave the hospital
+        Outcome Rate = Rate at which recovered/dead patients are leaving hospital bed
         :return: Time to Outcome, Outcome Rate
         >>> time_to_outcome = int(np.random.choice(ran_pert_dist(8, 10, 14, confidence=4, samples=1)))
         >>> outcome_rate = np.random.choice(1.0 / ran_pert_dist(8, 10, 14, confidence=4, samples=1))
@@ -129,14 +136,15 @@ class Variables:
 
 def admitted_bed(number_of_days: int, new_days: list, lst_outcome: list, lst_day_out: list, lst_hospitalized: list, number_of_beds: int) -> tuple:
     """
-        beds_available = Number of available beds
-        :param number_of_days:  Number days of the pendemic we want to test on
-        :param new_days: List contains the number of days after which the test result are coming out
-        :param lst_outcome:list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out:this is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param lst_hospitalized: This is the list of patients wo are hospitalized after being tested
-        :param number_of_beds: This is the available number of hospital beds in the given city
-        :return:  beds_available
+        This function calculates the number of hospital beds that are remaining after being occupied by hospitalized patients
+        :param number_of_days:  Number of days considered for each iteration of the simulation
+        :param new_days: List containing the number of days after which the test result are coming out
+        :param lst_outcome: List of number of patients with some outcome. Either recovered or dead
+        :param lst_day_out: List of number of days for each day in simulation, after which the outcome is received
+        :param lst_hospitalized: List of number of patients who are hospitalized after being tested for infection
+        :param number_of_beds: Available number of hospital beds in the given city
+        :return: beds_available: Number of available beds on a given day based on the admitted patients and outcome patients,
+                     num_x_days: The days to be plotted on x-axis in the graph
         >>> admitted_bed(2, [5,10],  [40,28], [23,33], [10, 5], 500)
         ([530, 513], [0, 1])
         """
@@ -146,51 +154,51 @@ def admitted_bed(number_of_days: int, new_days: list, lst_outcome: list, lst_day
             if j == new_days[i]:
                 number_of_beds = number_of_beds - lst_hospitalized[i]
                 admitted_beds.append(number_of_beds)
-    beds_available = available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds)
-    return beds_available
+    beds_available, num_x_days = available_bed(number_of_days, lst_outcome, lst_day_out, number_of_beds, admitted_beds)
+    return beds_available, num_x_days
 
 
 def available_bed(number_of_days: int, lst_outcome: list, lst_day_out: list, number_of_beds: list, admitted_beds: list) -> tuple:
     """
-        available_beds : This function gives the number of available beds after admitting the patients. It keeps on updating the
-        number of available beds based on the admitted patients and  outcome patients.
-        :param number_of_days: Number of days simulation has to run
-        :param lst_outcome:  list of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out:  this is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param number_of_beds:  This is the available number of hospital beds in the given city
+        This function gives the number of available beds remaining after admitting the infected patients and discharging the recovered/dead patients
+        It keeps on updating the number of available beds based on the admitted patients and  outcome patients
+        :param number_of_days: Number of days for which each iteration of the simulation has to run
+        :param lst_outcome:  List of number of patients with some outcome. Either recovered or dead
+        :param lst_day_out:  List of number of days for each day in simulation, after which the outcome is recieved
+        :param number_of_beds:  Available number of hospital beds in the given city
         :param admitted_beds: List of beds after admitting the patients
-        :return:  available_beds: list of available beds for given day
+        :return: available_beds: List of available beds on a given day based on the admitted patients and outcome (recovered/dead) patients,
+                     x_num_days: The days to be plotted on x-axis in the graph
         >>> available_bed(2, [40,28],[23,33], [2000, 1900], [345, 400])
         ([385, 428], [0, 1])
         """
     x_num_days = []
-    # Y_available_beds = []
     available_beds = []
     for i in range(number_of_days):
         x_num_days.append(i)
-        # simulation_df['x'] = x_num_days
+
         for j in range(lst_day_out[i] + 1):
             if j == lst_day_out[i]:
                 admitted_beds[i] = admitted_beds[i] + lst_outcome[i]
                 available_beds.append(admitted_beds[i])
-    # Y_available_beds = available_beds
-    # simulation_df['y'] = available_beds
-    # print('available beds: ', available_beds)
+
     return available_beds, x_num_days
 
 
 def test_result_days(lst_day: list, lst_time_to_outcome: list, number_of_days: int, new_days: list, lst_outcome: list, lst_day_out: list, lst_hospitalized: list, number_of_beds: int) -> tuple:
     """
-        avail_beds =
-        :param lst_day: List of nth days when test result are coming out
-        :param lst_time_to_outcome: The nth day when outcome have come with respect to the admitted day
+        This function creates two lists of the number of days after which testing results are received and the number of days after which recovered/dead patients are discharged
+        :param lst_day: List of nth days after which test result are coming out
+        :param lst_time_to_outcome: The nth day after which outcome is witnessed with respect to the admitted day
         :param number_of_days: Number of days to test the simulation
         :param new_days: List of number of days for each day in simulation, after which the test result are arriving
         :param lst_outcome: List of number of patients with some outcome. Either recovered or dead
-        :param lst_day_out: This is the list of number of days for each day in simulation, after which the outcome is recieved
-        :param lst_hospitalized: Number of patients hospitalized
-        :param number_of_beds: number of hospital beds available in simulation
-        :return: avail_beds: list of available beds for given day
+        :param lst_day_out: List of number of days for each day in simulation, after which the outcome is recieved
+        :param lst_hospitalized: List of number of patients to be hospitalized
+        :param number_of_beds: Number of hospital beds available in simulation
+        :return: avail_beds: List of available beds on a given day based on the admitted patients and outcome (recovered/dead) patients,
+                     num_days: The days to be plotted on x-axis in the graph
+
         >>> test_result_days([2, 3], [6, 7], 2, [5,10],[40,28], [23,33], [10, 5], 500)
         ([530, 513], [0, 1])
         """
@@ -208,22 +216,24 @@ def test_result_days(lst_day: list, lst_time_to_outcome: list, number_of_days: i
 
 def model(simulation_id: int, number_of_days: int, population: int, total_beds: int) -> tuple:
     """
-        :param simulation_id: Number of days simulation has to run for
-        :param number_of_days: Number of days simulation has to run for
-        :param population: General population of the region
-        :param total_beds: Total number of hospital beds available in the region
-        :return: bed_count: List of available beds
+        Computes the number of people in each compartment based on the transitional variables defined in the class Variables
+        :param simulation_id: ID for a simulation for a given pool of processes
+        :param number_of_days: Number of days for which the simulation has to run
+        :param population: General population of the region considered
+        :param total_beds: Total number of hospital beds available in the region considered
+        :return: bed_count: List of available beds on a given day based on the admitted patients and outcome (recovered/dead) patients,
+                    num_days: The days to be plotted on x-axis in the graph
         >>> model(1, 2, 200, 100)
         ([100.0, 100.0], [0, 1])
         """
     # concept of compartments - https://www.datahubbs.com/social-distancing-to-slow-the-coronavirus/
-    number_of_beds = total_beds  # beds in Chicago
+    number_of_beds = total_beds
     total_population = population
     exposed = 1.0
     susceptible = total_population
     infected = 0.0
     day = 0
-    hospitalized = 0
+
 
     lst_outcome = []
     lst_time_to_outcome = []
@@ -252,17 +262,20 @@ def model(simulation_id: int, number_of_days: int, population: int, total_beds: 
 
 def simulation(number_of_days: int, number_of_simulation: int, population: int, total_beds: int, do_threading=True):
     """
-    :param number_of_days: number of days simulation has to run for
-    :param number_of_simulation: Total number of simulations
-    :param population: Population in the region
-    :param total_beds: Total hospital beds available in the region
+    Simulates the defined model for the mentioned number of simulations
+    :param number_of_days: Number of days for which the simulation has to run
+    :param number_of_simulation: Total number of simulations specified
+    :param population: Population in the region considered
+    :param total_beds: Total hospital beds available in the region considered
     :param do_threading: Boolean value
+    :return overflow_day: the nth day on which the hospital beds will overflow,
+               list_of_beds_and_days: list of tuple of available beds and days in the simulation,
+               perc_vacant_beds: percentage of vacant beds by the end of the simulation
     >>> simulation(2, 1, 500, True)
     The Probability of vacant beds is: 0.0 %
     ([], [([1.0, 1.0], [0, 1])], [100.0])
     """
     count = 0
-    beds = []
     perc_vacant_beds = []
 
     worker = partial(model, number_of_days=number_of_days, population=population, total_beds=total_beds)
@@ -275,7 +288,7 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
         p = Pool(processes=4)
         for beds_and_days in tqdm(p.imap_unordered(worker, range(number_of_simulation)), total=number_of_simulation):
             list_of_beds_and_days.append(beds_and_days)
-        # list_of_beds_and_days = p.map(worker, range(number_of_simulation))
+
         p.close()
         p.join()
         # Linear code without Multiprocessing
@@ -303,7 +316,6 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
                 count += 1
                 break
     probability = count / number_of_simulation
-    # percent_vacant_bed = (sum(perc_vacant_beds) / len(perc_vacant_beds))*100
     print('The Probability of vacant beds is:', probability, '%')
     return overflow_day, list_of_beds_and_days, perc_vacant_beds
 
