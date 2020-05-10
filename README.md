@@ -29,7 +29,7 @@ Result (R): Patients who have vacated the hospital bed either due to their recov
 
 ## Simulation Variables
 
-Infectious Rate (𝛽) = 𝑅_1* 𝛾  (𝑅_1 – Reproduction Rate when social distancing is followed, 𝛾 – Recovery Rate)
+Infectious Rate (𝛽) = 𝑅_1* Outcome Rate (𝑅_1 – Reproduction Rate when social distancing is followed)
 
 Incubation Rate (𝛼) = 1/Incubation Period (Incubation Period – The duration after which the patients show symptoms after being exposed)
 
