@@ -13,7 +13,7 @@ COVID-19 came into this world without any warning or signs. This unannounced glo
 
 SEIR model is a compartmental model where each compartment dentots the number of people in that compartment. 
 
-The model is as follows: S-𝛽->E-𝛼->I-𝛾->R
+The model is as follows: S --𝛽--> E --𝛼--> I --𝛾--> R
 
 We have fit suitable variables in the model and altered the calculations for each transitional variable to get accurate results.
 
@@ -95,32 +95,53 @@ Test-1: Before doubling the number of beds
 
 The following plot shows the simulation results depecting how beds in hospitals are occupied and how they will overflow after certain time.
 
-![Alt text](C:\Users\clustervarad\Desktop\Sem II\IS590 PR\Final Project\Plots\Hypothesis -1 Plots\beds-vs-days.png?raw=true "Available beds vs Days")
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1b-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
 The following plot shows on which day the hospitals are most probable of getting overflow.
 
-![Alt text](C:\Users\clustervarad\Desktop\Sem II\IS590 PR\Final Project\Plots\Hypothesis -1 Plots\overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
 
 Test-2: After Doubling the number of beds
 
 
 The following plot shows the number of available beds once they are doubled
 
-![Alt text](C:\Users\clustervarad\Desktop\Sem II\IS590 PR\Final Project\Plots\Hypothesis -1 Plots\After\beds-vs-days.png?raw=true "Available beds vs Days")
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
 The following plot gives the available number of vacant beds in the hospitals
 
-![Alt text](C:\Users\clustervarad\Desktop\Sem II\IS590 PR\Final Project\Plots\Hypothesis -1 Plots\After\percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds")
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h1F-percent_vacant_beds-hist.png?raw=true "Percent Vacant Beds")
+
+**Conclusion**: Hypothesis-1 has passed
+
+###**Hypothesis-2**###
+
+Test-1: Before doubling the number of beds
+
+The following plot shows the simulation results depecting how beds in hospitals are occupied and how they will overflow after certain time.
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-beds-vs-days.png?raw=true "Available beds vs Days")
 
 
+The following plot shows on which day the hospitals are most probable of getting overflow.
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2b-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
+
+Test-2
+
+The following plot shows the simulation when the population was reduced by 25% then how the beds in hospitals are occupied and it shows that they do overflow.
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-beds-vs-days.png?raw=true "Available beds vs Days")
+
+Finally, we see on which day hospitals are getting overflow.
+
+![Alt text](https://github.com/tanyagupta55/final_project_2020Sp/blob/master/Plots/h2F-overflow-days-hist.png?raw=true "Day on which the hospitals overflow")
+
+**Conclusion**: Hypothesis-2 has failed
+
+###**Refrences**:
 
 
-
-
-
-
-
-
-
+###**Work Distribution**
