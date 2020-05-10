@@ -33,7 +33,7 @@ Infectious Rate (𝛽) = 𝑅_1* 𝛾  (𝑅_1 – Reproduction Rate when social
 
 Incubation Rate (𝛼) = 1/Incubation Period (Incubation Period – The duration after which the patients show symptoms after being exposed)
 
-Outcome (Result) Rate (𝛾) = 1/Infectious Period (Infectious Period – The duration in which the patient is capable of spreading COVID-19)
+Outcome (Result) Rate = 1/Infectious Period (Infectious Period – The duration in which the patient is capable of spreading COVID-19)
 
 Arrival Rate of people to be tested – The rate at which potential infected people are arriving in the hospital
 
