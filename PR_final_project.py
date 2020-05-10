@@ -299,7 +299,7 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
             beds, days = model(i, number_of_days, population, total_beds)
             list_of_beds_and_days.append((beds, days))
 
-    # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lock down, 50% of the total hospital beds will become vacant.
+    # Hypothesis -2: -If 25% of the total population is strictly asked to follow a lockdown, 50% of the total hospital beds will become vacant.
     # This patch gives the percentage of vacant beds for the nth simulation day
 
     for beds, days in list_of_beds_and_days:
@@ -308,7 +308,7 @@ def simulation(number_of_days: int, number_of_simulation: int, population: int, 
         else:
             prob_vacant = (beds[-1] * 1.0 / total_beds)
         perc_vacant_beds.append(prob_vacant*100)
-# Hypothesis-1 : If the number of hospital beds is doubled, there will never be an overflow in available number of beds.
+# Hypothesis-1 : If the number of hospital beds is doubled, there will never be an overflow in the available number of beds.
 # This patch gives the day on which the number of beds hits zero and appends that day number in overflow_day list
 # which is later plotted accordingly.
 
